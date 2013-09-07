@@ -37,7 +37,7 @@ gem 'devise'
 gem 'cancan'
 
 # Model- and Namespace-wide settings
-gem 'ledermann-rails-settings', :require => 'rails-settings'
+gem 'ledermann-rails-settings', :require => 'rails-settings', :git => 'git://github.com/ledermann/rails-settings.git', :branch => 'rails4'
 
 # Image uploads and attachments
 gem 'paperclip'
