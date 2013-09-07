@@ -1,0 +1,38 @@
+nav.uk-navbar
+    ul class="uk-navbar-nav"
+        - if Category.count < 1
+            li
+                a href="/"
+                    i class="uk-icon-home"
+        - else
+            li class="uk-parent" data-uk-dropdown=""
+                a href="/"
+                    i class="uk-icon-home"
+
+
+                div class="uk-dropdown uk-dropdown-navbar" style=""
+                    ul class="uk-nav uk-nav-navbar"
+                        - Category.all.each do |category|
+                            li
+                                = link_to category.title, category
+
+    ul class="uk-navbar-nav uk-navbar-flip"
+        li class="uk-parent" data-uk-dropdown=""
+            a href="#"
+                | Sign in
+
+            div class="uk-dropdown uk-dropdown-navbar" style=""
+                form class="uk-form"
+                    .uk-form-row
+                        input type="text" placeholder="Email"
+
+                    .uk-form-row
+                        input type="password" placeholder="Password"
+
+                    .uk-form-row
+                        button class="uk-button uk-button-primary uk-width-1-1" type="submit" Log in
+
+    div class="uk-navbar-content uk-navbar-center"
+        form class="uk-form uk-margin-remove uk-display-inline-block"
+            input type="text" placeholder="Search"
+            button class="uk-button uk-button-primary" type="submit" Submit

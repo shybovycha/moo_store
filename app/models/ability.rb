@@ -2,7 +2,15 @@ class Ability
     include CanCan::Ability
 
     def initialize(user)
-        user.roles.each do |role|
+        roles = []
+
+        if user.present?
+            roles = user.roles
+        else
+            roles << Role.find_by_title('Unregistered User')
+        end
+
+        roles.each do |role|
             role.permissions.each do |permission|
                 if permission.allowed === true
                     if permission.instance_id.nil?

@@ -1,0 +1,10 @@
+- if products.size > 0
+    - products.each_slice(4) do |products_chunk|
+        .uk-grid
+            - products_chunk.each do |product|
+                div class="uk-width-1-#{ products_chunk.size }"
+                    a class="uk-thumbnail" href="#{ url_for product }"
+                        img src="http://placekitten.com/200/100" alt=""
+                        div class="uk-thumbnail-caption"
+                            h3 = product.title
+                            == product.description

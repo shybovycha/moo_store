@@ -1,0 +1,30 @@
+article.uk-clearfix
+    .uk-grid
+        .uk-width-1-2.uk-text-center
+            .uk-grid
+                .uk-width-1-2
+                    h1.uk-heading-large
+                        = @product.title
+
+                .uk-width-1-2
+                    h1.uk-heading-large
+                        i.uk-icon-usd
+                        span
+                            = @product.base_price
+
+            p.uk-text-justify
+                == @product.description
+
+        .uk-width-1-2
+            .uk-thumbnail-expand
+                a class="uk-thumbnail uk-overlay-toggle" href="#"
+                        .uk-overlay
+                            img src="http://placekitten.com/400/200" alt="Image aligned to the right"
+                            .uk-overlay-caption
+                                = @product.title
+
+    .uk-grid
+        .uk-width-1-2.uk-text-center
+            a.uk-button.uk-button-large.uk-button-success href="#"
+                | Add to cart
+
