@@ -1,0 +1,19 @@
+table.ui.sortable.table.segment
+    thead
+        tr
+            th
+                |Title
+
+            th
+                |Price
+
+    tbody
+        - @products.each do |product|
+            tr
+                td
+                    = product.title
+                td
+                    = product.base_price
+
+a.ui.button.green href="#{ url_for(:controller => :cart, :action => :checkout) }"
+    | Checkout

@@ -1,10 +1,23 @@
 - if products.size > 0
     - products.each_slice(4) do |products_chunk|
-        .uk-grid
+        .ui.four.items
             - products_chunk.each do |product|
-                div class="uk-width-1-#{ products_chunk.size }"
-                    a class="uk-thumbnail" href="#{ url_for product }"
-                        img src="http://placekitten.com/200/100" alt=""
-                        div class="uk-thumbnail-caption"
-                            h3 = product.title
+                .item
+                    .ui.blue.ribbon.label
+                        = product.price
+                    
+                    .image
+                        a.like.ui.corner.label
+                            i.like.icon
+
+                        img src="http://placekitten.com/200/100"
+
+                    .content
+                        a.name href=product_path(product)
+                            = product.title
+                        
+                        p.description
                             == product.description
+
+                            a.ui.primary.button href="#{ url_for(:controller => :cart, :action => :add_to_cart, :product_id => product.id) }"
+                                |Add to cart

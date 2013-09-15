@@ -25,6 +25,6 @@ article.uk-clearfix
 
     .uk-grid
         .uk-width-1-2.uk-text-center
-            a.uk-button.uk-button-large.uk-button-success href="#"
+            a.uk-button.uk-button-large.uk-button-success href="#{ url_for(:controller => :cart, :action => :add_to_cart, :product_id => @product.id) }"
                 | Add to cart
 

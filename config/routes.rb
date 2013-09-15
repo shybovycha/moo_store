@@ -9,6 +9,10 @@ MooShop::Application.routes.draw do
   get "pages/home"
   get "pages/contacts"
 
+  get "cart/add/:product_id" => 'cart#add_to_cart'
+  get "cart" => 'cart#show'
+  get "checkout" => 'cart#checkout'
+
   root :to => "pages#home"
 
   # The priority is based upon order of creation: first created -> highest priority.

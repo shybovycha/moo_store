@@ -12,11 +12,11 @@ html
         == csrf_meta_tags
     body
         - if notice.present?
-            .uk-alert.uk-alert-success
+            .ui.ignore.yellow.message
                 = notice
 
         - if alert.present?
-            .uk-alert.uk-alert-danger
+            .ui.ignore.red.message
                 = alert
 
         - if signed_in? and current_user.admin?
@@ -24,5 +24,6 @@ html
         - else
             == render 'user_top_menu'
 
-        .main-content-wrapper.uk-text-center.uk-margin
-            == yield
+        .main-content-wrapper
+            .ui.piled.segment
+                == yield

@@ -9,11 +9,29 @@
  * compiled file, but it's generally better to create a new file per style scope.
  *
  *= require_self
- *= require 'uikit.min'
- *= require 'uikit.gradient.min'
+ *= require_tree './semantic/elements/'
+ *= require_tree './semantic/collections/'
+ *= require_tree './semantic/views/'
+ *= require_tree './semantic/modules/'
+ *= require 'semantic/semantic'
+ *= require 'font-awesome'
  *= require 'products'
  */
 
 .main-content-wrapper {
-    padding: 0 25px;
+    padding: 25px;
+}
+
+body {
+    font-family: "Open Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+    background: #FCFCFC;
+    margin: 0px;
+    padding: 0px;
+    color: #555555;
+    text-rendering: optimizeLegibility;
+    min-width: 320px;
+}
+
+.ui.items .item > .ribbon.label {
+    left: -1.4rem;
 }
