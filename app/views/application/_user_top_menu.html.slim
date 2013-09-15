@@ -1,9 +1,9 @@
 .ui.menu
-    - if Category.count < 1
-        a.item href="/"
-            i.icon-home.icon
+    a.item href="/"
+            i.home.icon
             |Home
-    - else
+
+    - if Category.count > 0
         .ui.simple.dropdown.item
             i.tags.icon
             |Categories
@@ -21,17 +21,23 @@
                 i.search.link.icon
         - if user_signed_in?
             i.user.icon
-            a href="#"
-                |My account
+
+            a.ui.horizontal.label.blue href="#{ edit_user_registration_path }"
+                |My profile
+
+            a.ui.horizontal.label.green href="#{ destroy_user_session_path }"
+                |Sign out
         - else
             .ui.simple.dropdown.item
                 i.user.icon
-                a href=""
-                    |Sign in 
-                strong
-                    |or 
 
-                a href="#"
+                a.ui.horizontal.label.blue href="#{ new_user_session_path }"
+                    |Sign in
+
+                strong
+                    |or
+
+                a.ui.horizontal.label.green href="#{ new_user_registration_path }"
                     |Sign up
 
                 /.menu
