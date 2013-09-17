@@ -35,3 +35,7 @@ body {
 .ui.items .item > .ribbon.label {
     left: -1.4rem;
 }
+
+.ui.items .item.short {
+    min-height: 130px;
+}

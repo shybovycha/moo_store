@@ -15,5 +15,8 @@ table.ui.sortable.table.segment
                 td
                     = product.base_price
 
+                    a.circular.right.floated.red.tiny.ui.icon.button href="#{ url_for :controller => :cart, :action => :remove_from_cart, :product_id => product.id }"
+                        i.icon.delete
+
 a.ui.button.green href="#{ url_for(:controller => :cart, :action => :checkout) }"
     | Checkout

@@ -10,6 +10,7 @@ MooShop::Application.routes.draw do
   get "pages/contacts"
 
   get "cart/add/:product_id" => 'cart#add_to_cart'
+  get "cart/remove/:product_id" => 'cart#remove_from_cart'
   get "cart" => 'cart#show'
   get "checkout" => 'cart#checkout'
 

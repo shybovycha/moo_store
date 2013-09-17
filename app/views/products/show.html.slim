@@ -1,30 +1,21 @@
-article.uk-clearfix
-    .uk-grid
-        .uk-width-1-2.uk-text-center
-            .uk-grid
-                .uk-width-1-2
-                    h1.uk-heading-large
-                        = @product.title
+.ui.huge.blue.message
+    = @product.title
 
-                .uk-width-1-2
-                    h1.uk-heading-large
-                        i.uk-icon-usd
-                        span
-                            = @product.base_price
+    a.ui.labeled.icon.green.right.floated.button href="#{ url_for(:controller => :cart, :action => :add_to_cart, :product_id => @product.id) }"
+        i.cart.icon
+        = @product.price
 
-            p.uk-text-justify
-                == @product.description
+/- @product.images.each do |image|
+.ui.four.items
+    - 1.upto(4) do
+        .short.item
+            .image
+                img.rounded.ui.image src="http://semantic-ui.com/images/demo/item4.jpg"
 
-        .uk-width-1-2
-            .uk-thumbnail-expand
-                a class="uk-thumbnail uk-overlay-toggle" href="#"
-                        .uk-overlay
-                            img src="http://placekitten.com/400/200" alt="Image aligned to the right"
-                            .uk-overlay-caption
-                                = @product.title
+.ui.vertical.segment
+    == @product.description
 
-    .uk-grid
-        .uk-width-1-2.uk-text-center
-            a.uk-button.uk-button-large.uk-button-success href="#{ url_for(:controller => :cart, :action => :add_to_cart, :product_id => @product.id) }"
-                | Add to cart
-
+.ui.vertical.segment
+    a.ui.labeled.icon.green.button href="#{ url_for(:controller => :cart, :action => :add_to_cart, :product_id => @product.id) }"
+        i.cart.icon
+        = @product.price
