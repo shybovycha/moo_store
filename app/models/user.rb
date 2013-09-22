@@ -2,11 +2,10 @@ class User < ActiveRecord::Base
     # Include default devise modules. Others available are:
     # :confirmable, :lockable, :timeoutable and :omniauthable
     devise :database_authenticatable, :registerable,
-    	:recoverable, :rememberable, :trackable, :validatable
+        :recoverable, :rememberable, :trackable, :validatable
 
     has_many :orders
-	has_one :shopping_cart
-	has_and_belongs_to_many :roles
+    has_and_belongs_to_many :roles
 
     has_settings do |s|
         # s.key :dashboard, :defaults => { :theme => 'blue', :view => 'monthly', :filter => false }

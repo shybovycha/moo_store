@@ -13,12 +13,32 @@
                     a.item href="#{ category_path(category) }"
                         = category.title
 
-
     .right.menu
         .borderless.item
             .ui.icon.input
                 input type="typext" name="query" placeholder="Search..."
                 i.search.link.icon
+
+        - unless @shopping_cart.empty?
+            .ui.simple.dropdown.item
+                i.cart.icon
+                |Your cart
+
+                .menu
+                    - @shopping_cart.counted_products.each do |product, count|
+                        a.item href="#{ product_path(product.id) }"
+                            strong
+                                = "#{ count } x"
+                            |&nbsp;
+                            = "#{ product.title }"
+                            |&nbsp;
+                            strong
+                                = "(#{ product.price })"
+
+                    .item
+                        a.ui.horizontal.label.blue href="#{ url_for(:controller => :cart, :action => :checkout) }"
+                            |Checkout
+
         - if user_signed_in?
             i.user.icon
 
