@@ -30,7 +30,7 @@ class OrdersController < ApplicationController
   # POST /orders
   # POST /orders.json
   def create
-    @order = Order.new(order_params)
+    @order = current_user.orders.new(order_params)
 
     @order.status = :new
 

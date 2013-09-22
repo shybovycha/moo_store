@@ -6,7 +6,8 @@
     - if Category.count > 0
         .ui.simple.dropdown.item
             i.tags.icon
-            |Categories
+            a href="#{ categories_path }"
+                |Categories
 
             .menu
                 - Category.all.each do |category|
@@ -16,7 +17,7 @@
     .right.menu
         .borderless.item
             .ui.icon.input
-                input type="typext" name="query" placeholder="Search..."
+                input type="typext" name="query" placeholder="Search..." id="search"
                 i.search.link.icon
 
         - unless @shopping_cart.empty?

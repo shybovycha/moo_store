@@ -1,8 +1,8 @@
 h1.uk-heading-large
     = @category.title
 
-- if @category.products.count > 0
-    = render :partial => 'products/list', :locals => { :products => @category.products }
+- if @products.count > 0
+    = render :partial => 'products/list', :locals => { :products => @products }
 
-    .with.centered.content
+    .with.content.centered
         = paginate @products

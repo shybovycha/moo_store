@@ -1,0 +1,11 @@
+h1
+    |Categories
+
+- @categories.each do |category|
+    a.ui.label href="#{ category_path(category) }"
+        = category.title
+
+        .detail
+            = category.products.count
+
+/= link_to 'New Category', new_category_path

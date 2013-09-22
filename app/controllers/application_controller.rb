@@ -25,4 +25,20 @@ class ApplicationController < ActionController::Base
 
         params[resource] &&= send(method) if respond_to?(method, true)
     end
+
+    def after_sign_in_path_for(resource_or_scope)
+        if request.referer.present?
+            request.referer
+        else
+            root_path
+        end
+    end
+
+    def after_sign_up_path_for(resource_or_scope)
+        if request.referer.present?
+            request.referer
+        else
+            root_path
+        end
+    end
 end

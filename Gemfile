@@ -63,3 +63,4 @@ gem 'pry'
 gem 'pry-debugger'
 
 gem 'faker'
+gem 'squeel'

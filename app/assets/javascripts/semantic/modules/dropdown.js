@@ -316,14 +316,14 @@ $.fn.dropdown = function(parameters) {
         is: {
           visible: function($subMenu) {
             return ($subMenu)
-              ? $subMenu.is(':animated, :visible')
-              : $menu.is(':animated, :visible')
+              ? $subMenu.is(':visible')
+              : $menu.is(':visible')
             ;
           },
           hidden: function($subMenu) {
             return ($subMenu)
-              ? $subMenu.is(':not(:animated, :visible)')
-              : $menu.is(':not(:animated, :visible)')
+              ? $subMenu.is(':not(:visible)')
+              : $menu.is(':not(:visible)')
             ;
           }
         },
@@ -349,12 +349,7 @@ $.fn.dropdown = function(parameters) {
                 callback();
               }
               else if($.fn.transition !== undefined) {
-                $currentMenu.transition({
-                  animation : settings.transition + ' in',
-                  duration  : settings.duration,
-                  complete  : callback,
-                  queue     : false
-                })
+                $currentMenu.transition(settings.transition + ' in', settings.duration, callback);
               }
               else if(settings.transition == 'slide down') {
                 $currentMenu
@@ -397,12 +392,7 @@ $.fn.dropdown = function(parameters) {
             if(dropdown.is.visible($currentMenu) ) {
               dropdown.verbose('Doing menu hide animation', $currentMenu);
               if($.fn.transition !== undefined) {
-                $currentMenu.transition({
-                  animation : settings.transition + ' out',
-                  duration  : settings.duration,
-                  complete  : callback,
-                  queue     : false
-                })
+                $currentMenu.transition(settings.transition + ' out', settings.duration, callback);
               }
               else if(settings.transition == 'none') {
                 callback();
@@ -444,7 +434,7 @@ $.fn.dropdown = function(parameters) {
 
         show: function() {
           dropdown.debug('Checking if dropdown can show');
-          if( dropdown.is.hidden() ) {
+          if( !dropdown.is.visible() ) {
             dropdown.hideOthers();
             dropdown.set.active();
             dropdown.animate.show(dropdown.set.visible);
@@ -456,7 +446,7 @@ $.fn.dropdown = function(parameters) {
         },
 
         hide: function() {
-          if( dropdown.is.visible() ) {
+          if( !dropdown.is.hidden() ) {
             dropdown.debug('Hiding dropdown');
             if( dropdown.can.click() ) {
               dropdown.unbind.intent();

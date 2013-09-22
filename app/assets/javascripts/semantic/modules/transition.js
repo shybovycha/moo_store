@@ -101,9 +101,7 @@ $.fn.transition = function() {
           settings = overrideSettings || settings;
           module.debug('Preparing animation', settings.animation);
           if(module.is.animating()) {
-            if(settings.queue) {
-              module.queue(settings.animation);
-            }
+            module.queue(settings.animation);
             return false;
           }
           module.save.conditions();
@@ -622,9 +620,6 @@ $.fn.transition.settings = {
   // animation duration (useful only with future js animations)
   animation    : 'fade',
   duration     : '700ms',
-
-  // queue up animations
-  queue        : true,
 
   className    : {
     transition : 'ui transition',
