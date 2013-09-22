@@ -39,3 +39,7 @@ body {
 .ui.items .item.short {
     min-height: 130px;
 }
+
+.with.centered.content {
+    text-align: center !important;
+}

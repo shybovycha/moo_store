@@ -61,3 +61,5 @@ gem 'quiet_assets'
 gem 'pry-rails'
 gem 'pry'
 gem 'pry-debugger'
+
+gem 'faker'

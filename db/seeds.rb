@@ -1,3 +1,5 @@
+require 'faker'
+
 # Create default users
 print "Creating admin user..."
 admin = User.create :email => 'admin@moo.store.com', :password => 'admin_passwd', :password_confirmation => 'admin_passwd'
@@ -75,12 +77,20 @@ print "Creating test category...\n"
 c = Category.create :title => 'Test Category #1'
 
 print "* Creating products...\n"
-p1 = Product.create :title => 'Product #1', :description => 'lorem ipsum ololo!', :base_price => 15.00
-p2 = Product.create :title => 'Product #2', :description => 'lorem ipsum ololo!', :base_price => 99.80
-p3 = Product.create :title => 'Product #3', :description => 'lorem ipsum ololo!', :base_price => 534.95
-p4 = Product.create :title => 'Product #4', :description => 'lorem ipsum ololo!', :base_price => 16000.00
-p5 = Product.create :title => 'Product #5', :description => 'lorem ipsum ololo!', :base_price => 42.30
 
-print "* Assigning products to category...\n"
-c.products += [ p1, p3, p4 ]
+1.upto(30) do |i|
+    price = ''
+
+    length = rand(5) + 1
+    length.times { price += rand(99).to_s }
+
+    price = price.to_i / 10.0
+
+    product = Product.create :title => "Product ##{ i }",
+                             :description => Faker::Lorem.sentences(rand(10)).join,
+                             :base_price => price
+
+    c.products << product if rand(10) > 3
+end
+
 print "Done\n"

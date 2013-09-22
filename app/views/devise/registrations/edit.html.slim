@@ -20,12 +20,14 @@
 
             .field
                 .ui.left.labeled.icon.input
-                    = f.label :current_password, 'Leave blank if you do not want to change your password now'
                     = f.password_field :current_password, :placeholder => "Your current password"
 
                     i.user.icon
                     .ui.corner.label
                         i.icon.asterisk
+
+                .ui.blue.pointing.above.ui.label
+                    |Leave blank if you do not want to change your password now
 
             .field
                 .ui.left.labeled.icon.input

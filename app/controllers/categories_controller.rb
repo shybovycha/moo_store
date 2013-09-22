@@ -12,6 +12,7 @@ class CategoriesController < ApplicationController
   # GET /categories/1
   # GET /categories/1.json
   def show
+      @products = @products.page(params[:page] || 1)
   end
 
   # GET /categories/new
