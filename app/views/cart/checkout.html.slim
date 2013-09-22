@@ -1,1 +1,67 @@
-h1 Hello, i am checkout page!
+h1 To checkout, you must sign in
+
+.ui.two.column.page.grid
+    .column
+        h2 Sign in
+
+        .ui.form.item
+            = form_for(User.new, :url => session_path(User)) do |f|
+                .field
+                    .ui.left.labeled.icon.input
+                        = f.email_field :email, :autofocus => true, :placeholder => "E-mail"
+
+                        i.user.icon
+                        .ui.corner.label
+                            i.icon.asterisk
+
+                .field
+                    .ui.left.labeled.icon.input
+                        = f.password_field :password, :placeholder => "Password"
+
+                        i.lock.icon
+                        .ui.corner.label
+                            i.icon.asterisk
+
+                - if Devise.mappings[:user].rememberable?
+                    .field.inline
+                        .ui.checkbox
+                            = f.check_box :remember_me
+                            label for="user_remember_me"
+
+                        label for="user_remember_me"
+                            |Remember me
+
+                = f.submit "Sign in", :class => "ui blue submit button"
+
+                - if Devise.mappings[:user].recoverable?
+                    = link_to "Forgot your password?", new_password_path(User), :class => 'ui green submit button'
+
+    .column
+        h2 Register now
+        .ui.form.item
+            = form_for(User.new, :url => registration_path(User)) do |f|
+                .field
+                    .ui.left.labeled.icon.input
+                        = f.email_field :email, :autofocus => true, :placeholder => "E-mail"
+
+                        i.user.icon
+                        .ui.corner.label
+                            i.icon.asterisk
+
+                .field
+                    .ui.left.labeled.icon.input
+                        = f.password_field :password, :placeholder => "Password"
+
+                        i.lock.icon
+                        .ui.corner.label
+                            i.icon.asterisk
+
+                .field
+                    .ui.left.labeled.icon.input
+                        = f.password_field :password_confirmation, :placeholder => "Password again, please"
+
+                        i.lock.icon
+                        .ui.corner.label
+                            i.icon.asterisk
+
+                = f.submit "Sign up", :class => "ui blue submit button"

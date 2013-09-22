@@ -1,7 +1,7 @@
 .ui.menu
     a.item href="/"
-            i.home.icon
-            |Home
+        i.home.icon
+        |Home
 
     - if Category.count > 0
         .ui.simple.dropdown.item
@@ -36,7 +36,7 @@
                                 = "(#{ product.price })"
 
                     .item
-                        a.ui.horizontal.label.blue href="#{ url_for(:controller => :cart, :action => :checkout) }"
+                        a.ui.horizontal.label.blue href="#{ checkout_path }"
                             |Checkout
 
         - if user_signed_in?

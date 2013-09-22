@@ -1,47 +1,80 @@
-nav.uk-navbar
-    ul class="uk-navbar-nav"
-        li class="uk-parent uk-active" data-uk-dropdown=""
-            a href="/"
-                i class="uk-icon-home"
+.ui.menu
+    a.item href="/"
+        i.home.icon
+        |Home
 
-            div class="uk-dropdown uk-dropdown-navbar" style=""
-                ul class="uk-nav uk-nav-navbar"
-                    - if Category.count > 0
-                        - Category.all.each do |category|
-                            li
-                                = link_to category.title, category
-                    - else
-                        li class="uk-nav-header"
-                            | No product categories
+    - if Category.count > 0
+        .ui.simple.dropdown.item
+            i.tags.icon
+            |Categories
 
-    .uk-navbar-content
-        span.uk-badge.uk-badge-danger
-            | Admin zone
+            .menu
+                - Category.all.each do |category|
+                    a.item href="#{ category_path(category) }"
+                        = category.title
 
-    /ul.uk-navbar-nav.uk-navbar-flip
-        li.uk-hidden-small
-            - if user_signed_in?
-                = link_to('Sign out', destroy_user_session_path)
-            - else
-                = link_to('Login', new_user_session_path)
+    .right.menu
+        .borderless.item
+            .ui.icon.input
+                input type="typext" name="query" placeholder="Search..."
+                i.search.link.icon
 
-    ul class="uk-navbar-nav uk-navbar-flip"
-        li class="uk-parent uk-active" data-uk-dropdown=""
-            a href="#"
-                | Sign in
+        - unless @shopping_cart.empty?
+            .ui.simple.dropdown.item
+                i.cart.icon
+                |Your cart
 
-            div class="uk-dropdown uk-dropdown-navbar" style=""
-                form class="uk-form"
-                    .uk-form-row
-                        input type="text" placeholder="Email"
+                .menu
+                    - @shopping_cart.counted_products.each do |product, count|
+                        a.item href="#{ product_path(product.id) }"
+                            strong
+                                = "#{ count } x"
+                            |&nbsp;
+                            = "#{ product.title }"
+                            |&nbsp;
+                            strong
+                                = "(#{ product.price })"
 
-                    .uk-form-row
-                        input type="password" placeholder="Password"
+                    .item
+                        a.ui.horizontal.label.blue href="#{ checkout_path }"
+                            |Checkout
 
-                    .uk-form-row
-                        button class="uk-button uk-button-primary uk-width-1-1" type="submit" Log in
+        - if user_signed_in?
+            .ui.item
+                i.user.icon
 
-    div class="uk-navbar-content uk-navbar-center"
-        form class="uk-form uk-margin-remove uk-display-inline-block"
-            input type="text" placeholder="Search"
-            button class="uk-button uk-button-primary" type="submit" Submit
+                a.ui.horizontal.label.blue href="#{ edit_user_registration_path }"
+                    |My profile
+
+                a.ui.horizontal.label.green href="#{ destroy_user_session_path }"
+                    |Sign out
+        - else
+            .ui.simple.dropdown.item
+                i.user.icon
+
+                a.ui.horizontal.label.blue href="#{ new_user_session_path }"
+                    |Sign in
+
+                strong
+                    |or
+
+                a.ui.horizontal.label.green href="#{ new_user_registration_path }"
+                    |Sign up
+
+                /.menu
+                    .ui.form.item
+                        .field
+                            .ui.left.labeled.icon.input
+                                input type="text" placeholder="E-mail"
+                                i.user.icon
+                                .ui.corner.label
+                                    i.icon.asterisk
+
+                        .field
+                            .ui.left.labeled.icon.input
+                                input type="password" placeholder="Password"
+                                i.lock.icon
+                                .ui.corner.label
+                                    i.icon.asterisk
+
+                        input.ui.blue.submit.button type="submit" value="Sign in"

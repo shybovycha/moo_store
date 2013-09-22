@@ -1,0 +1,28 @@
+.ui.error.form.segment
+    = form_for(@order) do |f|
+        - if @order.errors.any?
+            - @order.errors.full_messages.each do |msg|
+                .ui.error.message
+                    .header
+                        | #{ pluralize(@order.errors.count, "error") } prohibited this order from being saved
+                    p
+                        = msg
+
+        .field
+            = f.label :address
+            = f.text_area :address, :placeholder => 'Delivery address'
+
+        .grouped.inline.fields
+            = f.label :payment_method
+
+            - Order.payment_methods.each do |method|
+                - method_id = "order_payment_method_#{ method.gsub(/\s+/, '_').downcase }"
+
+                .field
+                    .ui.radio.checkbox
+                        = f.radio_button :payment_method, method, :id => method_id
+                        label for="#{ method_id }"
+                    label for="#{ method_id }"
+                        = method
+
+        = f.submit :class => 'ui green submit button'

@@ -57,6 +57,7 @@ gem 'kaminari'
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 
-gem 'quiet_assets', :group => :development
-gem 'pry-rails', :group => :development
+gem 'quiet_assets'
+gem 'pry-rails'
 gem 'pry'
+gem 'pry-debugger'

@@ -16,6 +16,10 @@ class OrdersController < ApplicationController
 
   # GET /orders/new
   def new
+    unless user_signed_in?
+      redirect_to new_registration_path
+    end
+
     @order = Order.new
   end
 
@@ -27,6 +31,8 @@ class OrdersController < ApplicationController
   # POST /orders.json
   def create
     @order = Order.new(order_params)
+
+    @order.status = :new
 
     respond_to do |format|
       if @order.save
@@ -57,6 +63,7 @@ class OrdersController < ApplicationController
   # DELETE /orders/1.json
   def destroy
     @order.destroy
+
     respond_to do |format|
       format.html { redirect_to orders_url }
       format.json { head :no_content }
@@ -71,6 +78,6 @@ class OrdersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def order_params
-      params.require(:order).permit(:address, :payment_method, :status)
+      params.require(:order).permit(:address, :payment_method)
     end
 end

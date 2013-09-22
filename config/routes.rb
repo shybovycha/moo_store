@@ -6,20 +6,20 @@ MooShop::Application.routes.draw do
 
   resources :products
 
-  get "pages/home"
-  get "pages/contacts"
+  get 'pages/home', :as => 'home'
+  get 'pages/contacts', :as => 'contacts'
 
-  get "cart/add/:product_id" => 'cart#add_to_cart'
-  get "cart/remove/:product_id" => 'cart#remove_from_cart'
-  get "cart" => 'cart#show'
-  get "checkout" => 'cart#checkout'
+  get 'cart/add/:product_id' => 'cart#add_to_cart', :as => 'add_to_cart'
+  get 'cart/remove/:product_id' => 'cart#remove_from_cart', :as => 'remove_from_cart'
+  get 'cart' => 'cart#show', :as => 'cart'
+  get 'checkout' => 'cart#checkout', :as => 'checkout'
 
-  root :to => "pages#home"
+  root :to => 'pages#home'
 
   # The priority is based upon order of creation: first created -> highest priority.
-  # See how all your routes lay out with "rake routes".
+  # See how all your routes lay out with 'rake routes'.
 
-  # You can have the root of your site routed with "root"
+  # You can have the root of your site routed with 'root'
   # root 'welcome#index'
 
   # Example of regular route:

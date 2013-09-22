@@ -7,16 +7,22 @@ table.ui.sortable.table.segment
             th
                 |Price
 
+            th
+                |In the cart
+
     tbody
-        - @products.each do |product|
+        - @shopping_cart.counted_products.each do |product, count|
             tr
                 td
                     = product.title
                 td
                     = product.base_price
 
-                    a.circular.right.floated.red.tiny.ui.icon.button href="#{ url_for :controller => :cart, :action => :remove_from_cart, :product_id => product.id }"
+                td
+                    = count
+
+                    a.circular.right.floated.red.tiny.ui.icon.button href="#{ remove_from_cart_path product.id }"
                         i.icon.delete
 
-a.ui.button.green href="#{ url_for(:controller => :cart, :action => :checkout) }"
+a.ui.button.green href="#{ checkout_path }"
     | Checkout

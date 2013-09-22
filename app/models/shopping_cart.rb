@@ -1,35 +1,76 @@
 class ShoppingCart
     class CartStorage
-        class SessionStorage
+        class BaseStorage
+            def dump(data)
+                data.to_json
+            end
+
+            def parse(data)
+                JSON.parse(data)
+            rescue
+                if data.is_a? Hash
+                    data
+                else
+                    {}
+                end
+            end
+        end
+
+        class SessionStorage < BaseStorage
             def initialize(session)
                 @session = session
             end
 
             def save(data)
-                @session[:shopping_cart] = data
+                @session[:shopping_cart] = dump(data)
             end
 
             def load
-                @session[:shopping_cart] || nil
+                parse(@session[:shopping_cart] || nil)
             end
         end
 
-        class DBStorage
+        class DBStorage < BaseStorage
             def initialize(model)
                 @model = model
             end
 
             def save(data)
-                @model.update_attribute :shopping_cart, data
+                @model.update_attribute :shopping_cart, dump(data)
             end
 
             def load
-                @model.shopping_cart
+                parse(@model.shopping_cart)
             end
         end
 
-        def initialize(storage)
-            if storage.is_a? ActiveRecord::Base
+        class MergedStore < BaseStorage
+            def initialize(model, session)
+                @session = session
+                @model = model
+            end
+
+            def save(data)
+                @model.update_attribute :shopping_cart, dump(data)
+            end
+
+            def load
+                session_data = parse(@session[:shopping_cart])
+                model_data = parse(@model.shopping_cart)
+
+                merged_data = session_data.merge(model_data) { |_, old_amount, new_amount| old_amount + new_amount }
+
+                @session.delete :shopping_cart
+                @model.update_attribute :shopping_cart, dump(merged_data)
+
+                merged_data
+            end
+        end
+
+        def initialize(storage, secondary_storage)
+            if secondary_storage.present?
+                @storage = MergedStore.new(storage, secondary_storage)
+            elsif storage.is_a? ActiveRecord::Base
                 @storage = DBStorage.new(storage)
             else
                 @storage = SessionStorage.new(storage)
@@ -45,9 +86,9 @@ class ShoppingCart
         end
     end
 
-    def initialize(storage)
-        @storage = CartStorage.new(storage)
-        parse(@storage.load)
+    def initialize(storage, secondary_storage = nil)
+        @storage = CartStorage.new(storage, secondary_storage)
+        load
     end
 
     def products
@@ -101,19 +142,11 @@ class ShoppingCart
         save
     end
 
-    def dump
-        items.to_json
-    end
-
-    def parse(string)
-        if string.blank?
-            @items = {}
-        else
-            @items = JSON.parse(string)
-        end
+    def load
+        @items = @storage.load
     end
 
     def save
-        @storage.save dump
+        @storage.save items
     end
 end

@@ -24,23 +24,11 @@ class CartController < ApplicationController
     end
 
     def show
-        if user_signed_in?
-            @cart = current_user.cart
-            @products = @cart.counted_products
-        else
-            @cart = ShoppingCart.new
-
-            if session[:cart].present?
-                product_ids = session[:cart]
-                @products = product_ids.map { |id| Product.find(id) }
-            else
-                @products = []
-            end
-
-            @cart.products = @products
-        end
     end
 
     def checkout
+        if user_signed_in?
+            redirect_to new_order_path
+        end
     end
 end

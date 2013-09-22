@@ -1,6 +1,6 @@
 # Create default users
 print "Creating admin user..."
-admin = User.create :email => 'admin@moo_store.com', :password => 'admin_passwd', :password_confirmation => 'admin_passwd'
+admin = User.create :email => 'admin@moo.store.com', :password => 'admin_passwd', :password_confirmation => 'admin_passwd'
 print "Done\n"
 
 print "Creating roles:\n"
