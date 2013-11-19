@@ -28,11 +28,8 @@
 
 @font-face {
   font-family: 'Icons';
-  src: url(/assets/semantic/icons.eot);
-  src: url(/assets/semantic/icons.eot?#iefix) format('embedded-opentype');
-  src: url(/assets/semantic/icons.ttf) format('truetype');
-  src: url(/assets/semantic/icons.svg#icons) format('svg');
-  src: url(/assets/semantic/icons.woff) format('woff');
+  src: url(../fonts/icons.eot);
+  src: url(../fonts/icons.eot?#iefix) format('embedded-opentype'), url(../fonts/icons.woff) format('woff'), url(../fonts/icons.ttf) format('truetype'), url(../fonts/icons.svg#icons) format('svg');
   font-style: normal;
   font-weight: normal;
   font-variant: normal;
