@@ -1,10 +1,13 @@
-/*  ******************************
-  Accordion
-  Author: Jack Lukic
-  Notes: First Commit July 19, 2012
-
-  Simple accordion design
-******************************  */
+/*
+ * # Semantic - Accordion
+ * http://github.com/jlukic/semantic-ui/
+ *
+ *
+ * Copyright 2013 Contributors
+ * Released under the MIT license
+ * http://opensource.org/licenses/MIT
+ *
+ */
 
 ;(function ($, window, document, undefined) {
 
@@ -12,33 +15,32 @@ $.fn.accordion = function(parameters) {
   var
     $allModules     = $(this),
 
-    settings        = ( $.isPlainObject(parameters) )
-      ? $.extend(true, {}, $.fn.accordion.settings, parameters)
-      : $.fn.accordion.settings,
-
-    className       = settings.className,
-    namespace       = settings.namespace,
-    selector        = settings.selector,
-    error           = settings.error,
-
-    eventNamespace  = '.' + namespace,
-    moduleNamespace = 'module-' + namespace,
-    moduleSelector  = $allModules.selector || '',
-
     time            = new Date().getTime(),
     performance     = [],
 
     query           = arguments[0],
     methodInvoked   = (typeof query == 'string'),
     queryArguments  = [].slice.call(arguments, 1),
-    invokedResponse
+    returnedValue
   ;
   $allModules
     .each(function() {
       var
+        settings        = ( $.isPlainObject(parameters) )
+          ? $.extend(true, {}, $.fn.accordion.settings, parameters)
+          : $.extend({}, $.fn.accordion.settings),
+
+        className       = settings.className,
+        namespace       = settings.namespace,
+        selector        = settings.selector,
+        error           = settings.error,
+
+        eventNamespace  = '.' + namespace,
+        moduleNamespace = 'module-' + namespace,
+        moduleSelector  = $allModules.selector || '',
+
         $module  = $(this),
         $title   = $module.find(selector.title),
-        $icon    = $module.find(selector.icon),
         $content = $module.find(selector.content),
 
         element  = this,
@@ -58,6 +60,7 @@ $.fn.accordion = function(parameters) {
         },
 
         instantiate: function() {
+          instance = module;
           $module
             .data(moduleNamespace, module)
           ;
@@ -85,8 +88,10 @@ $.fn.accordion = function(parameters) {
           resetStyle: function() {
             module.verbose('Resetting styles on element', this);
             $(this)
+              .attr('style', '')
               .removeAttr('style')
               .children()
+                .attr('style', '')
                 .removeAttr('style')
             ;
           }
@@ -116,7 +121,7 @@ $.fn.accordion = function(parameters) {
           var
             $activeTitle     = $title.eq(index),
             $activeContent   = $activeTitle.next($content),
-            $previousTitle   = $title.filter('.' + className.active),
+            $previousTitle   = $activeTitle.siblings(selector.title).filter('.' + className.active),
             $previousContent = $previousTitle.next($title),
             contentIsOpen    =  ($previousTitle.size() > 0)
           ;
@@ -131,13 +136,15 @@ $.fn.accordion = function(parameters) {
                 .children()
                   .animate({
                     opacity: 0
-                  }, settings.speed, module.event.resetStyle)
+                  }, settings.duration, module.event.resetStyle)
                   .end()
-                .slideUp(settings.speed , settings.easing, function() {
+                .slideUp(settings.duration , settings.easing, function() {
                   $previousContent
                     .removeClass(className.active)
+                    .attr('style', '')
                     .removeAttr('style')
                     .children()
+                      .attr('style', '')
                       .removeAttr('style')
                   ;
                 })
@@ -149,11 +156,13 @@ $.fn.accordion = function(parameters) {
             $activeContent
               .stop()
               .children()
+                .attr('style', '')
                 .removeAttr('style')
                 .end()
-              .slideDown(settings.speed, settings.easing, function() {
+              .slideDown(settings.duration, settings.easing, function() {
                 $activeContent
                   .addClass(className.active)
+                  .attr('style', '')
                   .removeAttr('style')
                 ;
                 $.proxy(settings.onOpen, $activeContent)();
@@ -168,7 +177,7 @@ $.fn.accordion = function(parameters) {
             $activeTitle   = $title.eq(index),
             $activeContent = $activeTitle.next($content)
           ;
-          module.debug('Closing accordion content', $activeTitle);
+          module.debug('Closing accordion content', $activeContent);
           $activeTitle
             .removeClass(className.active)
           ;
@@ -179,10 +188,11 @@ $.fn.accordion = function(parameters) {
             .children()
               .animate({
                 opacity: 0
-              }, settings.speed, module.event.resetStyle)
+              }, settings.duration, module.event.resetStyle)
               .end()
-            .slideUp(settings.speed, settings.easing, function(){
+            .slideUp(settings.duration, settings.easing, function(){
               $activeContent
+                .attr('style', '')
                 .removeAttr('style')
               ;
               $.proxy(settings.onClose, $activeContent)();
@@ -192,14 +202,11 @@ $.fn.accordion = function(parameters) {
         },
 
         setting: function(name, value) {
-          module.debug('Changing setting', name, value);
-          if(value !== undefined) {
-            if( $.isPlainObject(name) ) {
-              $.extend(true, settings, name);
-            }
-            else {
-              settings[name] = value;
-            }
+          if( $.isPlainObject(name) ) {
+            $.extend(true, settings, name);
+          }
+          else if(value !== undefined) {
+            settings[name] = value;
           }
           else {
             return settings[name];
@@ -225,7 +232,7 @@ $.fn.accordion = function(parameters) {
               module.performance.log(arguments);
             }
             else {
-              module.debug = Function.prototype.bind.call(console.info, console, settings.moduleName + ':');
+              module.debug = Function.prototype.bind.call(console.info, console, settings.name + ':');
               module.debug.apply(console, arguments);
             }
           }
@@ -236,13 +243,13 @@ $.fn.accordion = function(parameters) {
               module.performance.log(arguments);
             }
             else {
-              module.verbose = Function.prototype.bind.call(console.info, console, settings.moduleName + ':');
+              module.verbose = Function.prototype.bind.call(console.info, console, settings.name + ':');
               module.verbose.apply(console, arguments);
             }
           }
         },
         error: function() {
-          module.error = Function.prototype.bind.call(console.error, console, settings.moduleName + ':');
+          module.error = Function.prototype.bind.call(console.error, console, settings.name + ':');
           module.error.apply(console, arguments);
         },
         performance: {
@@ -281,9 +288,6 @@ $.fn.accordion = function(parameters) {
             if(moduleSelector) {
               title += ' \'' + moduleSelector + '\'';
             }
-            if($allModules.size() > 1) {
-              title += ' ' + '(' + $allModules.size() + ')';
-            }
             if( (console.group !== undefined || console.table !== undefined) && performance.length > 0) {
               console.groupCollapsed(title);
               if(console.table) {
@@ -315,22 +319,22 @@ $.fn.accordion = function(parameters) {
                 ? value + query[depth + 1].charAt(0).toUpperCase() + query[depth + 1].slice(1)
                 : query
               ;
-              if( $.isPlainObject( instance[value] ) && (depth != maxDepth) ) {
-                instance = instance[value];
-              }
-              else if( $.isPlainObject( instance[camelCaseValue] ) && (depth != maxDepth) ) {
+              if( $.isPlainObject( instance[camelCaseValue] ) && (depth != maxDepth) ) {
                 instance = instance[camelCaseValue];
-              }
-              else if( instance[value] !== undefined ) {
-                found = instance[value];
-                return false;
               }
               else if( instance[camelCaseValue] !== undefined ) {
                 found = instance[camelCaseValue];
                 return false;
               }
+              else if( $.isPlainObject( instance[value] ) && (depth != maxDepth) ) {
+                instance = instance[value];
+              }
+              else if( instance[value] !== undefined ) {
+                found = instance[value];
+                return false;
+              }
               else {
-                module.error(error.method);
+                module.error(error.method, query);
                 return false;
               }
             });
@@ -341,14 +345,14 @@ $.fn.accordion = function(parameters) {
           else if(found !== undefined) {
             response = found;
           }
-          if($.isArray(invokedResponse)) {
-            invokedResponse.push(response);
+          if($.isArray(returnedValue)) {
+            returnedValue.push(response);
           }
-          else if(typeof invokedResponse == 'string') {
-            invokedResponse = [invokedResponse, response];
+          else if(returnedValue !== undefined) {
+            returnedValue = [returnedValue, response];
           }
           else if(response !== undefined) {
-            invokedResponse = response;
+            returnedValue = response;
           }
           return found;
         }
@@ -367,8 +371,8 @@ $.fn.accordion = function(parameters) {
       }
     })
   ;
-  return (invokedResponse !== undefined)
-    ? invokedResponse
+  return (returnedValue !== undefined)
+    ? returnedValue
     : this
   ;
 };
@@ -384,6 +388,9 @@ $.fn.accordion.settings = {
   exclusive   : true,
   collapsible : true,
 
+  duration    : 500,
+  easing      : 'easeInOutQuint',
+
   onOpen      : function(){},
   onClose     : function(){},
   onChange    : function(){},
@@ -393,19 +400,24 @@ $.fn.accordion.settings = {
   },
 
   className   : {
-    active    : 'active',
-    hover     : 'hover'
+    active : 'active'
   },
 
   selector    : {
-    title     : '.title',
-    icon      : '.icon',
-    content   : '.content'
-  },
+    title   : '.title',
+    content : '.content'
+  }
 
-  speed       : 500,
-  easing      : 'easeInOutQuint'
 
 };
 
+// Adds easing
+$.extend( $.easing, {
+  easeInOutQuint: function (x, t, b, c, d) {
+    if ((t/=d/2) < 1) return c/2*t*t*t*t*t + b;
+    return c/2*((t-=2)*t*t*t*t + 2) + b;
+  }
+});
+
 })( jQuery, window , document );
+

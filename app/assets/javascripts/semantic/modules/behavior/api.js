@@ -1,42 +1,13 @@
-  /*  ******************************
-  API
-  Author: Jack Lukic
-  Notes: First Commit May 08, 2012
-
-  These are modules which bind API functionality to the DOM
-
-  Requires: nada
-
-  Initialization:
-  $('.button')
-    .apiButton({
-      success: function() {}
-    })
-  ;
-
-  in our example api is automapped to an object literal
-  @ quirky.config.endpoint.api
-
-  HTML:
-  <div class="button" action="follow" data-id="5">
-
-  URL        : quirky.config.endpoint.api.follow
-  Given Value: /follow/{$id}/
-  Sent Value : /follow/5/
-
-  (4 ways to map api endpoint, each will be looked for in succession)
-  url mapping order:
-    first  : defined in plugin init as url (arbitrary url)
-    second : defined in plugin init as action (action in obj literal grouping 'api')
-    third  : defined in data-url
-    fourth : defined in data-action
-
-  beforeSend:
-  this callback can be used to modify request settings before XHR
-  it also can be used to look for for pre-conditions to prevent API
-  call by returning "false"
-
-******************************  */
+/*
+ * # Semantic - API
+ * http://github.com/jlukic/semantic-ui/
+ *
+ *
+ * Copyright 2013 Contributors
+ * Released under the MIT license
+ * http://opensource.org/licenses/MIT
+ *
+ */
 
 ;(function ( $, window, document, undefined ) {
 
@@ -76,7 +47,7 @@
       queryArguments  = [].slice.call(arguments, 1),
 
       module,
-      invokedResponse
+      returnedValue
     ;
 
     module = {
@@ -379,26 +350,22 @@
       },
 
       setting: function(name, value) {
-        if(value !== undefined) {
-          if( $.isPlainObject(name) ) {
-            $.extend(true, settings, name);
-          }
-          else {
-            settings[name] = value;
-          }
+        if( $.isPlainObject(name) ) {
+          $.extend(true, settings, name);
+        }
+        else if(value !== undefined) {
+          settings[name] = value;
         }
         else {
           return settings[name];
         }
       },
       internal: function(name, value) {
-        if(value !== undefined) {
-          if( $.isPlainObject(name) ) {
-            $.extend(true, module, name);
-          }
-          else {
-            module[name] = value;
-          }
+        if( $.isPlainObject(name) ) {
+          $.extend(true, module, name);
+        }
+        else if(value !== undefined) {
+          module[name] = value;
         }
         else {
           return module[name];
@@ -410,7 +377,7 @@
             module.performance.log(arguments);
           }
           else {
-            module.debug = Function.prototype.bind.call(console.info, console, settings.moduleName + ':');
+            module.debug = Function.prototype.bind.call(console.info, console, settings.name + ':');
             module.debug.apply(console, arguments);
           }
         }
@@ -421,13 +388,13 @@
             module.performance.log(arguments);
           }
           else {
-            module.verbose = Function.prototype.bind.call(console.info, console, settings.moduleName + ':');
+            module.verbose = Function.prototype.bind.call(console.info, console, settings.name + ':');
             module.verbose.apply(console, arguments);
           }
         }
       },
       error: function() {
-        module.error = Function.prototype.bind.call(console.error, console, settings.moduleName + ':');
+        module.error = Function.prototype.bind.call(console.error, console, settings.name + ':');
         module.error.apply(console, arguments);
       },
       performance: {
@@ -454,11 +421,11 @@
         },
         display: function() {
           var
-            title = settings.moduleName + ':',
+            title = settings.name + ':',
             totalTime = 0
           ;
-          clearTimeout(module.performance.timer);
           time = false;
+          clearTimeout(module.performance.timer);
           $.each(performance, function(index, data) {
             totalTime += data['Execution Time'];
           });
@@ -512,7 +479,7 @@
               return false;
             }
             else {
-              module.error(error.method);
+              module.error(error.method, query);
               return false;
             }
           });
@@ -523,14 +490,14 @@
         else if(found !== undefined) {
           response = found;
         }
-        if($.isArray(invokedResponse)) {
-          invokedResponse.push(response);
+        if($.isArray(returnedValue)) {
+          returnedValue.push(response);
         }
-        else if(typeof invokedResponse == 'string') {
-          invokedResponse = [invokedResponse, response];
+        else if(returnedValue !== undefined) {
+          returnedValue = [returnedValue, response];
         }
         else if(response !== undefined) {
-          invokedResponse = response;
+          returnedValue = response;
         }
         return found;
       }
@@ -549,8 +516,8 @@
       module.initialize();
     }
 
-    return (invokedResponse !== undefined)
-      ? invokedResponse
+    return (returnedValue !== undefined)
+      ? returnedValue
       : this
     ;
   };
@@ -595,7 +562,8 @@
   };
 
   $.api.settings = {
-    name  : 'API',
+
+    name        : 'API',
     namespace   : 'api',
 
     debug       : true,

@@ -1,14 +1,13 @@
-/*  ******************************
-  Form Validation Components
-  Author: Jack Lukic
-  Notes: First Commit April 08, 2012
-
-  Refactored May 28, 2013
-
-  Allows you to validate forms based on a form validation object
-  Form validation objects are bound by either data-validate="" metadata, or form id or name tags
-
-******************************  */
+/*
+ * # Semantic - Form Validation
+ * http://github.com/jlukic/semantic-ui/
+ *
+ *
+ * Copyright 2013 Contributors
+ * Released under the MIT license
+ * http://opensource.org/licenses/MIT
+ *
+ */
 
 ;(function ( $, window, document, undefined ) {
 
@@ -36,7 +35,7 @@ $.fn.form = function(fields, parameters) {
     query           = arguments[0],
     methodInvoked   = (typeof query == 'string'),
     queryArguments  = [].slice.call(arguments, 1),
-    invokedResponse
+    returnedValue
   ;
   $allModules
     .each(function() {
@@ -247,7 +246,7 @@ $.fn.form = function(fields, parameters) {
                 .html(errors[0])
               ;
               if(!promptExists) {
-                if(settings.transition && $.fn.transition !== undefined) {
+                if(settings.transition && $.fn.transition !== undefined && $module.transition('is supported')) {
                   module.verbose('Displaying error with css transition', settings.transition);
                   $prompt.transition(settings.transition + ' in', settings.duration);
                 }
@@ -280,7 +279,7 @@ $.fn.form = function(fields, parameters) {
             ;
             if(settings.inline && $prompt.is(':visible')) {
               module.verbose('Removing prompt for field', field);
-              if(settings.transition && $.fn.transition !== undefined) {
+              if(settings.transition && $.fn.transition !== undefined && $module.transition('is supported')) {
                 $prompt.transition(settings.transition + ' out', settings.duration, function() {
                   $prompt.remove();
                 });
@@ -361,7 +360,7 @@ $.fn.form = function(fields, parameters) {
             var
               $field        = module.get.field(field.identifier),
               type          = validation.type,
-              value         = $field.val(),
+              value         = $field.val() + '',
 
               bracketRegExp = /\[(.*?)\]/i,
               bracket       = bracketRegExp.exec(type),
@@ -371,44 +370,35 @@ $.fn.form = function(fields, parameters) {
             ;
             // if bracket notation is used, pass in extra parameters
             if(bracket !== undefined && bracket !== null) {
-              ancillary    = bracket[1];
+              ancillary    = '' + bracket[1];
               functionType = type.replace(bracket[0], '');
               isValid      = $.proxy(settings.rules[functionType], $module)(value, ancillary);
             }
             // normal notation
             else {
-              isValid = (type == 'checked')
-                ? $field.filter(':checked').size() > 0
-                : settings.rules[type](value)
-              ;
+              isValid = $.proxy(settings.rules[type], $field)(value);
             }
             return isValid;
           }
         },
 
         setting: function(name, value) {
-          module.debug('Changing setting', name, value);
-          if(value !== undefined) {
-            if( $.isPlainObject(name) ) {
-              $.extend(true, settings, name);
-            }
-            else {
-              settings[name] = value;
-            }
+          if( $.isPlainObject(name) ) {
+            $.extend(true, settings, name);
+          }
+          else if(value !== undefined) {
+            settings[name] = value;
           }
           else {
             return settings[name];
           }
         },
         internal: function(name, value) {
-          module.debug('Changing internal', name, value);
-          if(value !== undefined) {
-            if( $.isPlainObject(name) ) {
-              $.extend(true, module, name);
-            }
-            else {
-              module[name] = value;
-            }
+          if( $.isPlainObject(name) ) {
+            $.extend(true, module, name);
+          }
+          else if(value !== undefined) {
+            module[name] = value;
           }
           else {
             return module[name];
@@ -420,7 +410,7 @@ $.fn.form = function(fields, parameters) {
               module.performance.log(arguments);
             }
             else {
-              module.debug = Function.prototype.bind.call(console.info, console, settings.moduleName + ':');
+              module.debug = Function.prototype.bind.call(console.info, console, settings.name + ':');
               module.debug.apply(console, arguments);
             }
           }
@@ -431,13 +421,13 @@ $.fn.form = function(fields, parameters) {
               module.performance.log(arguments);
             }
             else {
-              module.verbose = Function.prototype.bind.call(console.info, console, settings.moduleName + ':');
+              module.verbose = Function.prototype.bind.call(console.info, console, settings.name + ':');
               module.verbose.apply(console, arguments);
             }
           }
         },
         error: function() {
-          module.error = Function.prototype.bind.call(console.error, console, settings.moduleName + ':');
+          module.error = Function.prototype.bind.call(console.error, console, settings.name + ':');
           module.error.apply(console, arguments);
         },
         performance: {
@@ -510,22 +500,22 @@ $.fn.form = function(fields, parameters) {
                 ? value + query[depth + 1].charAt(0).toUpperCase() + query[depth + 1].slice(1)
                 : query
               ;
-              if( $.isPlainObject( instance[value] ) && (depth != maxDepth) ) {
-                instance = instance[value];
-              }
-              else if( $.isPlainObject( instance[camelCaseValue] ) && (depth != maxDepth) ) {
+              if( $.isPlainObject( instance[camelCaseValue] ) && (depth != maxDepth) ) {
                 instance = instance[camelCaseValue];
-              }
-              else if( instance[value] !== undefined ) {
-                found = instance[value];
-                return false;
               }
               else if( instance[camelCaseValue] !== undefined ) {
                 found = instance[camelCaseValue];
                 return false;
               }
+              else if( $.isPlainObject( instance[value] ) && (depth != maxDepth) ) {
+                instance = instance[value];
+              }
+              else if( instance[value] !== undefined ) {
+                found = instance[value];
+                return false;
+              }
               else {
-                module.error(error.method);
+                module.error(error.method, query);
                 return false;
               }
             });
@@ -536,14 +526,14 @@ $.fn.form = function(fields, parameters) {
           else if(found !== undefined) {
             response = found;
           }
-          if($.isArray(invokedResponse)) {
-            invokedResponse.push(response);
+          if($.isArray(returnedValue)) {
+            returnedValue.push(response);
           }
-          else if(typeof invokedResponse == 'string') {
-            invokedResponse = [invokedResponse, response];
+          else if(returnedValue !== undefined) {
+            returnedValue = [returnedValue, response];
           }
           else if(response !== undefined) {
-            invokedResponse = response;
+            returnedValue = response;
           }
           return found;
         }
@@ -564,8 +554,8 @@ $.fn.form = function(fields, parameters) {
     })
   ;
 
-  return (invokedResponse !== undefined)
-    ? invokedResponse
+  return (returnedValue !== undefined)
+    ? returnedValue
     : this
   ;
 };
@@ -640,6 +630,9 @@ $.fn.form.settings = {
   },
 
   rules: {
+    checked: function() {
+      return ($(this).filter(':checked').size() > 0);
+    },
     empty: function(value) {
       return !(value === undefined || '' === value);
     },
@@ -659,6 +652,7 @@ $.fn.form.settings = {
       return (value != notValue);
     },
     contains: function(value, text) {
+      text = text.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
       return (value.search(text) !== -1);
     },
     is: function(value, text) {

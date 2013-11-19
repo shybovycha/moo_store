@@ -2,10 +2,12 @@ doctype html
 html
     head
         title MooShop
+
+        meta http-equiv="Content-Type" content="text/html; charset=utf-8"
         meta name="keywords" content="shop rails ruby moo_shop"
         meta name="author" content="shybovycha"
 
-        == stylesheet_link_tag "application", media: "all", "data-turbolinks-track" => true
+        == stylesheet_link_tag "application", :media => "all", "data-turbolinks-track" => true
 
         == javascript_include_tag "application", "data-turbolinks-track" => true
 

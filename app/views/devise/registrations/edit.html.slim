@@ -4,17 +4,19 @@
 
     .tabset
         .ui.tabular.menu
-            .item
-                a href="#settings"
-                    i.user.icon
-                    |Settings
+            a.item data-tab="profile-settings"
+                i.user.icon
+                |Profile Settings
 
-            .item
-                a href="#orders"
-                    i.cart.icon
-                    |My orders
+            a.item data-tab="system-settings"
+                i.settings.icon
+                |System Settings
 
-        .tab#settings
+            a.item data-tab="orders"
+                i.cart.icon
+                |My orders
+
+        .ui.active.tab data-tab="profile-settings"
             .ui.form.item
                 = form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put }) do |f|
                     = devise_error_messages!
@@ -62,7 +64,18 @@
 
                     = render "devise/shared/links"
 
-        .tab#orders
+        .ui.tab data-tab="system-settings"
+            .ui.segment
+                .ui.teal.submit.button
+                    i.download.disk.icon
+                    |Export products to XML
+
+            .ui.segment
+                .ui.green.submit.button
+                    i.upload.disk.icon
+                    |Import products from XML
+
+        .ui.tab data-tab="orders"
             - @orders.each do |order|
                 - order.order_items.each do |order_item|
                     = order_item.title

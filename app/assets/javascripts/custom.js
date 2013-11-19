@@ -1,5 +1,3 @@
 $(document).ready(function() {
-    $('.tabset').easytabs({
-        tabs: '.tabular .item'
-    });
+    $('.tabset .ui.tabular.menu .item').tab();
 });

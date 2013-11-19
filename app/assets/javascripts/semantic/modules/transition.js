@@ -1,11 +1,13 @@
-/*  ******************************
-  Semantic Module: Transition
-  Author: Jack Lukic
-  Notes: First Commit March 25, 2013
-
-  A module for controlling css animations
-
-******************************  */
+/*
+ * # Semantic - Transition
+ * http://github.com/jlukic/semantic-ui/
+ *
+ *
+ * Copyright 2013 Contributors
+ * Released under the MIT license
+ * http://opensource.org/licenses/MIT
+ *
+ */
 
 ;(function ( $, window, document, undefined ) {
 
@@ -28,7 +30,7 @@ $.fn.transition = function() {
       || window.msRequestAnimationFrame
       || function(callback) { setTimeout(callback, 0); },
 
-    invokedResponse
+    returnedValue
   ;
   $allModules
     .each(function() {
@@ -99,9 +101,15 @@ $.fn.transition = function() {
 
         animate: function(overrideSettings) {
           settings = overrideSettings || settings;
+          if(!module.is.supported()) {
+            module.error(error.support);
+            return false;
+          }
           module.debug('Preparing animation', settings.animation);
           if(module.is.animating()) {
-            module.queue(settings.animation);
+            if(settings.queue) {
+              module.queue(settings.animation);
+            }
             return false;
           }
           module.save.conditions();
@@ -116,7 +124,7 @@ $.fn.transition = function() {
           if(!module.has.direction() && module.can.transition()) {
             module.set.direction();
           }
-          if(!module.can.animate()) {
+          if(!module.has.transitionAvailable) {
             module.restore.conditions();
             module.error(error.noAnimation);
             return false;
@@ -142,10 +150,12 @@ $.fn.transition = function() {
             if($module.hasClass(className.outward)) {
               module.restore.conditions();
               module.hide();
+              $.proxy(settings.onHide, this)();
             }
             else if($module.hasClass(className.inward)) {
               module.restore.conditions();
               module.show();
+              $.proxy(settings.onShow, this)();
             }
             else {
               module.restore.conditions();
@@ -165,6 +175,16 @@ $.fn.transition = function() {
             animation = animation || settings.animation;
             if( $module.hasClass(className.inward) || $module.hasClass(className.outward) ) {
               return true;
+            }
+          },
+          transitionAvailable: function() {
+            if($module.css(animationName) !== 'none') {
+              module.debug('CSS definition found');
+              return true;
+            }
+            else {
+              module.debug('Unable to find css definition');
+              return false;
             }
           }
         },
@@ -310,7 +330,7 @@ $.fn.transition = function() {
                 animation : animation
               });
             }
-            return $.fn.transition.settings;
+            return $.extend({}, $.fn.transition.settings);
           },
 
           animationName: function() {
@@ -326,7 +346,7 @@ $.fn.transition = function() {
             ;
             for(animation in animations){
               if( element.style[animation] !== undefined ){
-                module.verbose('Determining animation vendor name property', animations[animation]);
+                module.verbose('Determined animation vendor name property', animations[animation]);
                 return animations[animation];
               }
             }
@@ -346,7 +366,7 @@ $.fn.transition = function() {
             ;
             for(animation in animations){
               if( element.style[animation] !== undefined ){
-                module.verbose('Determining animation vendor end event', animations[animation]);
+                module.verbose('Determined animation vendor end event', animations[animation]);
                 return animations[animation];
               }
             }
@@ -356,16 +376,6 @@ $.fn.transition = function() {
         },
 
         can: {
-          animate: function() {
-            if($module.css(animationName) !== 'none') {
-              module.debug('CSS definition found');
-              return true;
-            }
-            else {
-              module.debug('Unable to find css definition');
-              return false;
-            }
-          },
           transition: function() {
             var
               $clone           = $('<div>').addClass( $module.attr('class') ).appendTo($('body')),
@@ -394,6 +404,9 @@ $.fn.transition = function() {
           },
           visible: function() {
             return $module.is(':visible');
+          },
+          supported: function() {
+            return(animationName !== false && animationEnd !== false);
           }
         },
 
@@ -404,6 +417,7 @@ $.fn.transition = function() {
             .addClass(className.transition)
             .addClass(className.hidden)
           ;
+          module.repaint();
         },
         show: function() {
           module.verbose('Showing element');
@@ -412,6 +426,7 @@ $.fn.transition = function() {
             .addClass(className.transition)
             .addClass(className.visible)
           ;
+          module.repaint();
         },
 
         start: function() {
@@ -430,26 +445,22 @@ $.fn.transition = function() {
         },
 
         setting: function(name, value) {
-          if(value !== undefined) {
-            if( $.isPlainObject(name) ) {
-              $.extend(true, settings, name);
-            }
-            else {
-              settings[name] = value;
-            }
+          if( $.isPlainObject(name) ) {
+            $.extend(true, settings, name);
+          }
+          else if(value !== undefined) {
+            settings[name] = value;
           }
           else {
             return settings[name];
           }
         },
         internal: function(name, value) {
-          if(value !== undefined) {
-            if( $.isPlainObject(name) ) {
-              $.extend(true, module, name);
-            }
-            else {
-              module[name] = value;
-            }
+          if( $.isPlainObject(name) ) {
+            $.extend(true, module, name);
+          }
+          else if(value !== undefined) {
+            module[name] = value;
           }
           else {
             return module[name];
@@ -551,18 +562,18 @@ $.fn.transition = function() {
                 ? value + query[depth + 1].charAt(0).toUpperCase() + query[depth + 1].slice(1)
                 : query
               ;
-              if( $.isPlainObject( instance[value] ) && (depth != maxDepth) ) {
-                instance = instance[value];
-              }
-              else if( $.isPlainObject( instance[camelCaseValue] ) && (depth != maxDepth) ) {
+              if( $.isPlainObject( instance[camelCaseValue] ) && (depth != maxDepth) ) {
                 instance = instance[camelCaseValue];
-              }
-              else if( instance[value] !== undefined ) {
-                found = instance[value];
-                return false;
               }
               else if( instance[camelCaseValue] !== undefined ) {
                 found = instance[camelCaseValue];
+                return false;
+              }
+              else if( $.isPlainObject( instance[value] ) && (depth != maxDepth) ) {
+                instance = instance[value];
+              }
+              else if( instance[value] !== undefined ) {
+                found = instance[value];
                 return false;
               }
               else {
@@ -576,14 +587,14 @@ $.fn.transition = function() {
           else if(found !== undefined) {
             response = found;
           }
-          if($.isArray(invokedResponse)) {
-            invokedResponse.push(response);
+          if($.isArray(returnedValue)) {
+            returnedValue.push(response);
           }
-          else if(typeof invokedResponse == 'string') {
-            invokedResponse = [invokedResponse, response];
+          else if(returnedValue !== undefined) {
+            returnedValue = [returnedValue, response];
           }
           else if(response !== undefined) {
-            invokedResponse = response;
+            returnedValue = response;
           }
           return found || false;
         }
@@ -591,8 +602,8 @@ $.fn.transition = function() {
       module.initialize();
     })
   ;
-  return (invokedResponse !== undefined)
-    ? invokedResponse
+  return (returnedValue !== undefined)
+    ? returnedValue
     : this
   ;
 };
@@ -600,43 +611,49 @@ $.fn.transition = function() {
 $.fn.transition.settings = {
 
   // module info
-  name   : 'Transition',
+  name        : 'Transition',
 
   // debug content outputted to console
-  debug        : true,
+  debug       : false,
 
   // verbose debug output
-  verbose      : true,
+  verbose     : true,
 
   // performance data output
-  performance  : true,
+  performance : true,
 
   // event namespace
-  namespace    : 'transition',
+  namespace   : 'transition',
 
   // animation complete event
-  complete     : function() {},
+  complete    : function() {},
+  onShow      : function() {},
+  onHide      : function() {},
 
-  // animation duration (useful only with future js animations)
-  animation    : 'fade',
-  duration     : '700ms',
+  // animation duration
+  animation   : 'fade',
+  duration    : '700ms',
 
-  className    : {
-    transition : 'ui transition',
+  // new animations will occur after previous ones
+  queue       : true,
+
+  className   : {
     animating  : 'animating',
-    looping    : 'looping',
-    loading    : 'loading',
     disabled   : 'disabled',
     hidden     : 'hidden',
-    visible    : 'visible',
     inward     : 'in',
-    outward    : 'out'
+    loading    : 'loading',
+    looping    : 'looping',
+    outward    : 'out',
+    transition : 'ui transition',
+    visible    : 'visible'
   },
 
   // possible errors
   error: {
     noAnimation : 'There is no css animation matching the one you specified.',
-    method      : 'The method you called is not defined'
+    method      : 'The method you called is not defined',
+    support     : 'This browser does not support CSS animations'
   }
 
 };

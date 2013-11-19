@@ -1,40 +1,13 @@
-/*  ******************************
-  Module
-  State
-  Change text based on state context
-  Hover/down/Active/Inactive
-  Author: Jack Lukic
-  Last revision: May 2012
-
-  State text module is used to apply text to a given node
-  depending on the elements "state"
-
-  State is either defined as "active" or "inactive" depending
-  on the returned value of a test function
-
-  Usage:
-
-  $button
-    .state({
-      states: {
-        active: true
-      },
-      text: {
-        inactive: 'Follow',
-        active  : 'Following',
-        enable  : 'Add',
-        disable : 'Remove'
-      }
-    })
-  ;
-
-  "Follow", turns to "Add" on hover, then "Following" on active
-  and finally "Remove" on active hover
-
-  This plugin works in correlation to API module and will, by default,
-  use deffered object accept/reject to determine state.
-
-******************************  */
+/*
+ * # Semantic - State
+ * http://github.com/jlukic/semantic-ui/
+ *
+ *
+ * Copyright 2013 Contributors
+ * Released under the MIT license
+ * http://opensource.org/licenses/MIT
+ *
+ */
 
 ;(function ( $, window, document, undefined ) {
 
@@ -64,7 +37,7 @@ $.fn.state = function(parameters) {
     moduleNamespace = namespace + '-module',
 
 
-    invokedResponse
+    returnedValue
   ;
   $allModules
     .each(function() {
@@ -583,22 +556,22 @@ $.fn.state = function(parameters) {
                 ? value + query[depth + 1].charAt(0).toUpperCase() + query[depth + 1].slice(1)
                 : query
               ;
-              if( $.isPlainObject( instance[value] ) && (depth != maxDepth) ) {
-                instance = instance[value];
-              }
-              else if( $.isPlainObject( instance[camelCaseValue] ) && (depth != maxDepth) ) {
+              if( $.isPlainObject( instance[camelCaseValue] ) && (depth != maxDepth) ) {
                 instance = instance[camelCaseValue];
-              }
-              else if( instance[value] !== undefined ) {
-                found = instance[value];
-                return false;
               }
               else if( instance[camelCaseValue] !== undefined ) {
                 found = instance[camelCaseValue];
                 return false;
               }
+              else if( $.isPlainObject( instance[value] ) && (depth != maxDepth) ) {
+                instance = instance[value];
+              }
+              else if( instance[value] !== undefined ) {
+                found = instance[value];
+                return false;
+              }
               else {
-                module.error(error.method);
+                module.error(error.method, query);
                 return false;
               }
             });
@@ -609,14 +582,14 @@ $.fn.state = function(parameters) {
           else if(found !== undefined) {
             response = found;
           }
-          if($.isArray(invokedResponse)) {
-            invokedResponse.push(response);
+          if($.isArray(returnedValue)) {
+            returnedValue.push(response);
           }
-          else if(typeof invokedResponse == 'string') {
-            invokedResponse = [invokedResponse, response];
+          else if(returnedValue !== undefined) {
+            returnedValue = [returnedValue, response];
           }
           else if(response !== undefined) {
-            invokedResponse = response;
+            returnedValue = response;
           }
           return found;
         }
@@ -637,8 +610,8 @@ $.fn.state = function(parameters) {
     })
   ;
 
-  return (invokedResponse !== undefined)
-    ? invokedResponse
+  return (returnedValue !== undefined)
+    ? returnedValue
     : this
   ;
 };
@@ -646,7 +619,7 @@ $.fn.state = function(parameters) {
 $.fn.state.settings = {
 
   // module info
-  moduleName : 'State',
+  name : 'State',
 
   // debug output
   debug      : true,

@@ -64,3 +64,4 @@ gem 'pry-debugger'
 
 gem 'faker'
 gem 'squeel'
+gem 'puma'
