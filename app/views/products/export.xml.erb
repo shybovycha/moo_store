@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<export_data>
+    <categories>
+        <% Category.all.each do |category| %>
+            <title><%= category.title %></title>
+        <% end %>
+    </categories>
+
+    <products>
+        <% Product.all.each do |product| %>
+            <product>
+                <% product.category.each do |category| %>
+                    <category><%= category.title %></category>
+                <% end %>
+
+                <title><%= product.title %></title>
+                <base_price><%= product.base_price %></base_price>
+                <description><%= product.description %></description>
+            </product>
+        <% end %>
+    </products>
+</export_data>

@@ -1,6 +1,9 @@
 MooShop::Application.routes.draw do
   devise_for :users, :controllers => { :registrations => "users/registrations" }
 
+  get 'products/export' => 'products#export', :as => 'export_products'
+  post 'products/import' => 'products#import', :as => 'import_products'
+
   resources :categories
 
   resources :orders

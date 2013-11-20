@@ -1,5 +1,5 @@
 class OrdersController < ApplicationController
-  before_action :set_order, only: [:show, :edit, :update, :destroy]
+  before_action :set_order, :only => [:show, :edit, :update, :destroy]
 
   load_and_authorize_resource
 
@@ -32,15 +32,24 @@ class OrdersController < ApplicationController
   def create
     @order = current_user.orders.new(order_params)
 
+    @shopping_cart.counted_products.each do |product, amount|
+        order_item = OrderItem.from_products product, amount
+        order_item.save
+
+        @order.order_items << order_item
+    end
+
     @order.status = :new
 
     respond_to do |format|
       if @order.save
-        format.html { redirect_to @order, notice: 'Order was successfully created.' }
-        format.json { render action: 'show', status: :created, location: @order }
+        @shopping_cart.clear!
+
+        format.html { redirect_to @order, :notice => 'Order was successfully created.' }
+        format.json { render :action => 'show', :status => :created, :location => @order }
       else
-        format.html { render action: 'new' }
-        format.json { render json: @order.errors, status: :unprocessable_entity }
+        format.html { render :action => 'new' }
+        format.json { render :json => @order.errors, :status => :unprocessable_entity }
       end
     end
   end
@@ -50,11 +59,11 @@ class OrdersController < ApplicationController
   def update
     respond_to do |format|
       if @order.update(order_params)
-        format.html { redirect_to @order, notice: 'Order was successfully updated.' }
+        format.html { redirect_to @order, :notice => 'Order was successfully updated.' }
         format.json { head :no_content }
       else
-        format.html { render action: 'edit' }
-        format.json { render json: @order.errors, status: :unprocessable_entity }
+        format.html { render :action => 'edit' }
+        format.json { render :json => @order.errors, :status => :unprocessable_entity }
       end
     end
   end

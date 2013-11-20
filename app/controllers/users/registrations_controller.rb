@@ -7,6 +7,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
     end
 
     def edit
-        @orders = current_user.orders.where { status.in [ 'complete', 'canceled' ] }
+        @orders = current_user.orders #.where { status.in [ 'complete', 'canceled' ] }
     end
 end

@@ -1,3 +1,4 @@
 $(document).ready(function() {
-    $('.tabset .ui.tabular.menu .item').tab();
+    $('.ui.tabular.menu .item').tab();
+    $('.ui.accordion').accordion();
 });

@@ -66,19 +66,41 @@
 
         .ui.tab data-tab="system-settings"
             .ui.segment
-                .ui.teal.submit.button
+                a.ui.teal.submit.button href=export_products_path
                     i.download.disk.icon
                     |Export products to XML
 
             .ui.segment
-                .ui.green.submit.button
-                    i.upload.disk.icon
-                    |Import products from XML
+                = form_tag(import_products_path, :method => :post, :multipart => true)
+                    .field
+                        .ui.left.labeled.icon.input
+                            = file_field_tag :products
+
+                            i.file.icon
+                            .ui.corner.label
+                                i.icon.asterisk
+
+                    br
+
+                    button.ui.green.submit.button type="submit"
+                        i.upload.disk.icon
+                        |Import products from XML
 
         .ui.tab data-tab="orders"
-            - @orders.each do |order|
-                - order.order_items.each do |order_item|
-                    = order_item.title
-                    = order_item.price
+            .ui.accordion
+                - @orders.each do |order|
+                    .title
+                        i.dropdown.icon
+                        b
+                            |#{ order.status } order on #{ l order.created_at }
 
-                |Submitted at #{ l order.created_at }
+                    .content
+                        - order.order_items.each do |order_item|
+                            = order_item.title
+                            - if order_item.amount > 1
+                                | x #{ order_item.amount }
+                            | - (<b>#{ order_item.price_s }</b>)
+                            br
+
+                        b
+                            |Total: #{ order.total_price_s }

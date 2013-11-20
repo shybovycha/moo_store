@@ -132,6 +132,12 @@ class ShoppingCart
         save
     end
 
+    def clear!
+        @items = {}
+
+        save
+    end
+
     def update_product_count(product, count)
         if count > 0
             items[product.id] = count

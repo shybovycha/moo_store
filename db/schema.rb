@@ -46,6 +46,7 @@ ActiveRecord::Schema.define(version: 20130922112726) do
   create_table "order_items", force: true do |t|
     t.string   "title"
     t.float    "price"
+    t.integer  "amount",     default: 1
     t.integer  "order_id"
     t.datetime "created_at"
     t.datetime "updated_at"

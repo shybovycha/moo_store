@@ -1,6 +1,6 @@
 class Order < ActiveRecord::Base
     belongs_to :user
-    has_many :order_items
+    has_many :order_items, :dependent => :destroy
 
     validates :payment_method,
               :inclusion => {
@@ -18,5 +18,15 @@ class Order < ActiveRecord::Base
 
     def payment_methods
         [ 'Cash', 'Master Card', 'Visa' ]
+    end
+
+    def total_price
+        prices = order_items.map { |item| item.price.present? ? item.price.to_f : 0.0 }
+        prices = prices.present? ? prices : [ 0.0 ]
+        prices.inject :+
+    end
+
+    def total_price_s
+        "$ %.2f" % total_price
     end
 end
