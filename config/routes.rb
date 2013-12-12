@@ -18,6 +18,11 @@ MooShop::Application.routes.draw do
   get 'cart' => 'cart#show', :as => 'cart'
   get 'checkout' => 'cart#checkout', :as => 'checkout'
 
+  get 'admin' => 'admin#index', :as => 'admin_index'
+  get 'admin/products' => 'admin#products', :as => 'admin_products'
+  get 'admin/orders' => 'admin#orders', :as => 'admin_orders'
+  get 'admin/users' => 'admin#users', :as => 'admin_users'
+
   root :to => 'pages#home'
 
   # The priority is based upon order of creation: first created -> highest priority.
