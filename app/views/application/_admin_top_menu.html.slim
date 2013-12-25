@@ -3,14 +3,28 @@
         i.home.icon
         |Shop home
 
-    a.item href=admin_index_path
+    .ui.simple.dropdown.item
         i.dashboard.icon
-        |Admin dashboard
+        a href=admin_index_path
+            |Admin dashboard
+
+        .menu
+            a.item href=admin_products_path
+                |Products
+
+            a.item href=admin_categories_path
+                |Categories
+
+            a.item href=admin_orders_path
+                |Orders
+
+            a.item href=admin_users_path
+                |Users
 
     - if Category.count > 0
         .ui.simple.dropdown.item
             i.tags.icon
-            a href="#{ categories_path }"
+            a href=categories_path
                 |Categories
 
             .menu
