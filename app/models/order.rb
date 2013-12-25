@@ -1,32 +1,38 @@
 class Order < ActiveRecord::Base
-    belongs_to :user
-    has_many :order_items, :dependent => :destroy
+  STATUSES = [ :new, :processing, :completed, :cancelled ]
+  PAYMENT_METHODS = [ 'Cash', 'Master Card', 'Visa' ]
 
-    validates :payment_method,
-              :inclusion => {
-                  :in => proc { |object| object.payment_methods },
-                  :message => 'was not selected'
-              }
+  belongs_to :user
+  has_many :items, :dependent => :destroy, :foreign_key => :order_id, :class_name => 'OrderItem'
 
-    validates :address,
-              :presence => {
-                  :message => 'to deliver was not set'
-              }
+  validates :payment_method,
+            :inclusion => {
+                :in => PAYMENT_METHODS,
+                :message => 'was not selected'
+            }
 
-    # Order Status could be one of the following:
-    # :new, :processing, :completed, :canceled
+  validates :address,
+            :presence => {
+                :message => 'to deliver was not set'
+            }
 
-    def payment_methods
-        [ 'Cash', 'Master Card', 'Visa' ]
-    end
+  def status
+    (read_attribute :status).to_sym
+  end
 
-    def total_price
-        prices = order_items.map { |item| item.price.present? ? item.price.to_f : 0.0 }
-        prices = prices.present? ? prices : [ 0.0 ]
-        prices.inject :+
-    end
+  def status=(value)
+    value = value.to_sym
+    errors[:status] << "Unrecognized status `#{ value }`" unless STATUSES.include? value
+    write_attribute :status, value
+  end
 
-    def total_price_s
-        "$ %.2f" % total_price
-    end
+  def total_price
+      prices = items.map { |item| item.price.present? ? item.price.to_f : 0.0 }
+      prices = prices.present? ? prices : [ 0.0 ]
+      prices.inject :+
+  end
+
+  def total_price_s
+      "$ %.2f" % total_price
+  end
 end

@@ -5,7 +5,7 @@ h1
     a.item href=admin_products_path
         .content
             .meta
-                |#{ Product.all.count } products
+                = pluralize(Product.all.count, "product")
 
             .name
                 |Products
@@ -16,7 +16,7 @@ h1
     a.item href=admin_orders_path
         .content
             .meta
-                |#{ Order.all.count } orders
+                = pluralize(Order.all.count, "order")
 
             .name
                 |Orders
@@ -27,7 +27,7 @@ h1
     a.item href=admin_users_path
         .content
             .meta
-                |#{ User.all.count } users
+                = pluralize(User.all.count, "user")
 
             .name
                 |Users
@@ -38,7 +38,7 @@ h1
     a.item href=admin_categories_path
         .content
             .meta
-                |#{ Category.all.count } categories
+                = pluralize(Category.all.count, "category")
 
             .name
                 |Categories

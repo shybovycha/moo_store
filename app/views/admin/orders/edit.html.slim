@@ -1,0 +1,59 @@
+h1
+    |Edit order
+
+table.ui.table.segment
+    thead
+        tr
+            th.center.aligned colspan="3"
+                |Order items:
+
+        tr
+            th
+                |Title
+
+            th
+                |Amount
+
+            th
+                |Price
+
+    tbody
+        - @order.items.each do |item|
+            tr
+                td
+                    = item.title
+
+                td
+                    = item.amount
+
+                td
+                    = item.price
+
+    tfoot
+        tr
+            th
+                |&zwnj;
+
+            th
+                |Items: #{ @order.items.count }
+
+            th
+                |Total: #{ @order.total_price_s }
+
+.ui.form.segment
+    = form_for @order do |f|
+        .field
+            .ui.blue.labeled.icon.top.left.pointing.dropdown.button
+                = f.hidden_field :status
+                i.cart.icon
+                span.text
+                    |Order status
+
+                .menu
+                    - Order::STATUSES.each do |status|
+                        .item
+                            i.edit.icon
+                            = status.to_s.titleize
+
+        .field
+            = f.submit :class => 'ui green button'

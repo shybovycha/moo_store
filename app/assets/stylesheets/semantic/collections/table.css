@@ -34,6 +34,10 @@
   transition: all 0.1s ease-out;
 }
 
+.ui.table .center.aligned {
+  text-align: center;
+}
+
 /* Headers */
 
 .ui.table thead {

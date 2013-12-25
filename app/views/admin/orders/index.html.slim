@@ -23,7 +23,7 @@ table.ui.sortable.table.segment
                     = link_to order.user.full_name, admin_user_path(order.user)
 
                 td
-                    = link_to "#{ time_ago_in_words order.created_at } ago", admin_order_path(order)
+                    = link_to "#{ time_ago_in_words order.created_at } ago", edit_admin_order_path(order)
 
                 td
                     = order.total_price_s

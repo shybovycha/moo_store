@@ -2,24 +2,10 @@ class Admin::OrdersController < ApplicationController
     include Administrative
 
     def index
-        @orders = Order.all
-    end
-
-    def show
-    end
-
-    def create
-    end
-
-    def new
-    end
-
-    def delete
+        @orders = Order.page(@page).per(@per_page)
     end
 
     def edit
-    end
-
-    def update
+        @order = Order.find(params[:id])
     end
 end

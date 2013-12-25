@@ -1,0 +1,33 @@
+= form_for @product, :url => admin_product_path(@product) do |f|
+    - if @product.errors.any?
+        .ui.error.message
+            .header
+                |#{ pluralize(@product.errors.count, "error") } prohibited this product from being saved:
+
+            ul.list
+                - @product.errors.full_messages.each do |msg|
+                    li
+                        = msg
+
+    .field
+        .ui.left.labeled.input
+            = f.text_field :title, :placeholder => "Title"
+            .ui.corner.label
+                i.icon.asterisk
+
+    .field
+        .ui.left.labeled.input
+            = f.text_field :base_price, :placeholder => "Base price"
+            .ui.corner.label
+                i.icon.asterisk
+
+    .field
+        .ui.left.labeled.input
+            = f.text_area :description, :placeholder => "Description"
+            .ui.corner.label
+                i.icon.asterisk
+
+    .field
+        = f.select :category, Category.all.map { |c| [ c.title, c.id ] }, { :include_blank => true }, { class: 'chosen-select' }
+
+    = f.submit :class => "ui blue submit button"

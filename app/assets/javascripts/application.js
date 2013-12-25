@@ -29,3 +29,4 @@
 //= require semantic/modules/transition
 //= require semantic
 //= require custom
+//= require chosen-jquery

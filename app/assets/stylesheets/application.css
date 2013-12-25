@@ -15,6 +15,7 @@
  *= require_tree './semantic/modules/'
  *= require 'font-awesome'
  *= require 'products'
+ *= require chosen
  */
 
 .main-content-wrapper {

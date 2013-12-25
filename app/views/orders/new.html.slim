@@ -1,4 +1,33 @@
 h1
     |Submit your order
 
-= render 'form'
+.ui.error.form.segment
+    table.ui.table.segment
+        thead
+            tr
+                th.center.aligned colspan="3"
+                    |Your order:
+
+            tr
+                th
+                    |Title
+
+                th
+                    |Amount
+
+                th
+                    |Price
+
+        tbody
+            - @shopping_cart.counted_products.each do |product, amount|
+                tr
+                    td
+                        = link_to product.title, product
+
+                    td
+                        = amount
+
+                    td
+                        = "$ %.2f" % (product.base_price * amount)
+
+    = render 'form'

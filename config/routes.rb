@@ -1,31 +1,37 @@
 MooShop::Application.routes.draw do
-  devise_for :users, :controllers => { :registrations => "users/registrations" }
+  root :to => 'pages#home'
 
-  get 'products/export' => 'products#export', :as => 'export_products'
-  post 'products/import' => 'products#import', :as => 'import_products'
+  devise_for :users, :controllers => { :registrations => "users/registrations" }
 
   resources :categories
 
-  resources :orders
+  resources :orders, :except => [ :destroy ]
 
-  resources :products
+  resources :products do
+    collection do
+      get :export
+      post :import
+    end
+  end
 
-  get 'pages/home', :as => 'home'
-  get 'pages/contacts', :as => 'contacts'
+  scope :pages, :path => 'pages' do
+    get 'home', :to => 'pages#home', :as => 'home'
+    get 'contacts', :to => 'pages#contacts', :as => 'contacts'
+  end
 
-  get 'cart/add/:product_id' => 'cart#add_to_cart', :as => 'add_to_cart'
-  get 'cart/remove/:product_id' => 'cart#remove_from_cart', :as => 'remove_from_cart'
-  get 'cart' => 'cart#show', :as => 'cart'
-  get 'checkout' => 'cart#checkout', :as => 'checkout'
+  scope :cart, :path => 'cart' do
+    get 'add/:product_id' => 'cart#add_to_cart', :as => 'add_to_cart'
+    get 'remove/:product_id' => 'cart#remove_from_cart', :as => 'remove_from_cart'
+    get '/' => 'cart#show', :as => 'cart'
+    get 'checkout' => 'cart#checkout', :as => 'checkout'
+  end
 
   namespace :admin do
     resources :users
-    resources :orders
+    resources :orders, :only => [ :edit, :index ]
     resources :products
-    resources :categories
+    resources :categories, :only => [ :new, :edit, :index ]
 
     get :index
   end
-
-  root :to => 'pages#home'
 end

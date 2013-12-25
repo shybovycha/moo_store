@@ -1,0 +1,36 @@
+= form_for @user, :url => admin_user_path(@user) do |f|
+    - if @user.errors.any?
+        .ui.error.message
+            .header
+                |#{ pluralize(@user.errors.count, "error") } prohibited this user from being saved:
+
+            ul.list
+                - @user.errors.full_messages.each do |msg|
+                    li
+                        = msg
+
+    .field
+        .ui.left.labeled.input
+            = f.text_field :email, :placeholder => "E-mail"
+            .ui.corner.label
+                i.icon.asterisk
+
+    .field
+        .ui.input
+            = f.password_field :password, :placeholder => "Password"
+
+    .field
+        .ui.left.labeled.input
+            = f.password_field :password_confirmation, :placeholder => "Password confirmation"
+            .ui.corner.label
+                i.icon.asterisk
+
+    .field
+        .ui.input
+            = f.text_field :first_name, :placeholder => "First name"
+
+    .field
+        .ui.input
+            = f.text_field :last_name, :placeholder => "Last name"
+
+    = f.submit :class => "ui green submit button"

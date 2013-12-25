@@ -2,24 +2,17 @@ class Admin::CategoriesController < ApplicationController
     include Administrative
 
     def index
-        @categories = Category.all
-    end
-
-    def show
-    end
-
-    def create
+        @categories = Category.page(@page).per(@per_page)
     end
 
     def new
-    end
-
-    def delete
+        @category = Category.new
     end
 
     def edit
+        @category = Category.find(params[:id])
     end
 
-    def update
+    def show
     end
 end

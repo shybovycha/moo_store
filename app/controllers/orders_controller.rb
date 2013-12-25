@@ -36,7 +36,7 @@ class OrdersController < ApplicationController
         order_item = OrderItem.from_products product, amount
         order_item.save
 
-        @order.order_items << order_item
+        @order.items << order_item
     end
 
     @order.status = :new
@@ -87,6 +87,10 @@ class OrdersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def order_params
-      params.require(:order).permit(:address, :payment_method)
+      permit = [ :address, :payment_method ]
+
+      permit << :status if action_name == 'update'
+
+      params.require(:order).permit(*permit)
     end
 end

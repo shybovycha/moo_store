@@ -1,0 +1,18 @@
+= form_for @category do |f|
+    - if @category.errors.any?
+        .ui.error.message
+            .header
+                |#{ pluralize(@category.errors.count, "error") } prohibited this category from being saved:
+
+            ul.list
+                - @category.errors.full_messages.each do |msg|
+                    li
+                        = msg
+
+    .field
+        .ui.left.labeled.input
+            = f.text_field :title, :placeholder => "Title"
+            .ui.corner.label
+                i.icon.asterisk
+
+    = f.submit :class => "ui blue submit button"

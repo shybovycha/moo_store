@@ -95,11 +95,11 @@
                             |#{ order.status } order on #{ l order.created_at }
 
                     .content
-                        - order.order_items.each do |order_item|
-                            = order_item.title
-                            - if order_item.amount > 1
-                                | x #{ order_item.amount }
-                            | - (<b>#{ order_item.price_s }</b>)
+                        - order.items.each do |item|
+                            = item.title
+                            - if item.amount > 1
+                                | x #{ item.amount }
+                            | - (<b>#{ item.price_s }</b>)
                             br
 
                         b

@@ -1,0 +1,40 @@
+h1
+    |Users
+
+.ui.right.aligned.grid
+    .row
+        .column
+            a.ui.circular.green.button href=new_admin_user_path
+                |New user
+
+table.ui.sortable.table.segment
+    thead
+        tr
+            th
+                |Email
+
+            th
+                |Name
+
+            th
+                |Actions
+
+    tbody
+        - @users.each do |user|
+            tr
+                td
+                    = link_to user.email, admin_user_path(user)
+
+                td
+                    = user.full_name
+
+                td
+                    a.ui.icon.blue.circular.button href=edit_admin_user_path(user)
+                        i.edit.icon
+
+                    |&nbsp;
+
+                    = link_to admin_user_path(user), :method => :delete, :class => 'ui red circular icon button' do
+                        i.remove.icon
+
+= paginate @users
