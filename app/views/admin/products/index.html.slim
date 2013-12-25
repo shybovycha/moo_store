@@ -1,0 +1,26 @@
+h1
+    |Manage products
+
+a.ui.circular.green.button href=new_admin_product_path
+    |New product
+
+.ui.warning.message
+    |Adding a classname of <code>ascending</code> or <code>descending</code> to the <code>th</code> will show the user the direction of sort. This example uses a modified version of the kylefox's <a href="https://github.com/kylefox/jquery-tablesort">tablesort plugin</a> to provide the proper class names.
+
+table.ui.sortable.table.segment
+    thead
+        tr
+            th
+                |Title
+
+            th
+                |Price
+
+    tbody
+        - @products.each do |product|
+            tr
+                td
+                    = link_to product.title, admin_product_path(product)
+
+                td
+                    = product.price

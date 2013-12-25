@@ -18,10 +18,14 @@ MooShop::Application.routes.draw do
   get 'cart' => 'cart#show', :as => 'cart'
   get 'checkout' => 'cart#checkout', :as => 'checkout'
 
-  get 'admin' => 'admin#index', :as => 'admin_index'
-  get 'admin/products' => 'admin#products', :as => 'admin_products'
-  get 'admin/orders' => 'admin#orders', :as => 'admin_orders'
-  get 'admin/users' => 'admin#users', :as => 'admin_users'
+  namespace :admin do
+    resources :users
+    resources :orders
+    resources :products
+    resources :categories
+
+    get :index
+  end
 
   root :to => 'pages#home'
 
@@ -65,7 +69,7 @@ MooShop::Application.routes.draw do
   #       get 'recent', on: :collection
   #     end
   #   end
-  
+
   # Example resource route with concerns:
   #   concern :toggleable do
   #     post 'toggle'

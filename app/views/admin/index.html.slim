@@ -1,4 +1,47 @@
-= render 'admin_navigation_menu'
-
 h1
-    |Index
+    |Admin dashboard
+
+.ui.four.items
+    a.item href=admin_products_path
+        .content
+            .meta
+                |#{ Product.all.count } products
+
+            .name
+                |Products
+
+            p.description
+                |Manage products - create, delete, update
+
+    a.item href=admin_orders_path
+        .content
+            .meta
+                |#{ Order.all.count } orders
+
+            .name
+                |Orders
+
+            p.description
+                |Handle orders - edit, accept, reject
+
+    a.item href=admin_users_path
+        .content
+            .meta
+                |#{ User.all.count } users
+
+            .name
+                |Users
+
+            p.description
+                |Review users - create, delete, update
+
+    a.item href=admin_categories_path
+        .content
+            .meta
+                |#{ Category.all.count } categories
+
+            .name
+                |Categories
+
+            p.description
+                |Manage product' categories - create, delete, update

@@ -15,4 +15,16 @@ class User < ActiveRecord::Base
     def admin?
         (roles.select { |r| r.permissions.where(:action => 'manage', :model => 'Role').present? }).present?
     end
+
+    def full_name
+        if first_name.present?
+            if last_name.present?
+                "#{ first_name.capitalize } #{ last_name.capitalize }"
+            else
+                first_name.capitalize
+            end
+        else
+            email
+        end
+    end
 end

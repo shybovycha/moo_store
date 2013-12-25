@@ -1,0 +1,31 @@
+doctype html
+html
+    head
+        title MooShop
+
+        meta charset="utf-8"
+        meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"
+
+        meta name="keywords" content="shop rails ruby moo_shop"
+        meta name="author" content="shybovycha"
+
+        == stylesheet_link_tag "application", :media => "all", "data-turbolinks-track" => true
+
+        == javascript_include_tag "application", "data-turbolinks-track" => true
+
+        == csrf_meta_tags
+    body
+        - if notice.present?
+            .ui.ignore.yellow.message
+                = notice
+
+        - if alert.present?
+            .ui.ignore.red.message
+                = alert
+
+        == render 'admin_top_menu'
+
+        .main-content-wrapper
+            .ui.piled.segment
+                == render 'admin/navigation_menu'
+                == yield

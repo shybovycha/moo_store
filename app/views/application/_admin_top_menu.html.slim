@@ -1,7 +1,11 @@
 .ui.menu
     a.item href="/"
         i.home.icon
-        |Home
+        |Shop home
+
+    a.item href=admin_index_path
+        i.dashboard.icon
+        |Admin dashboard
 
     - if Category.count > 0
         .ui.simple.dropdown.item
@@ -43,9 +47,6 @@
         - if user_signed_in?
             .ui.item
                 i.user.icon
-
-                a.ui.horizontal.label.orange href="#{ admin_index_path }"
-                    |Backoffice
 
                 a.ui.horizontal.label.blue href="#{ edit_user_registration_path }"
                     |Settings

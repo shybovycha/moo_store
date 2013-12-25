@@ -1,0 +1,32 @@
+h1
+    |Manage orders
+
+table.ui.sortable.table.segment
+    thead
+        tr
+            th
+                |User
+
+            th
+                |Created
+
+            th
+                |Total
+
+            th
+                |Status
+
+    tbody
+        - @orders.each do |order|
+            tr
+                td
+                    = link_to order.user.full_name, admin_user_path(order.user)
+
+                td
+                    = link_to "#{ time_ago_in_words order.created_at } ago", admin_order_path(order)
+
+                td
+                    = order.total_price_s
+
+                td
+                    = order.status
