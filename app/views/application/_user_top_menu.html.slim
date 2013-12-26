@@ -49,32 +49,13 @@
             a.ui.horizontal.label.green href="#{ destroy_user_session_path }"
                 |Sign out
         - else
-            .ui.simple.dropdown.item
-                i.user.icon
+            i.user.icon
 
-                a.ui.horizontal.label.blue href="#{ new_user_session_path }"
-                    |Sign in
+            a.ui.horizontal.label.blue href="#{ new_user_session_path }"
+                |Sign in
 
-                strong
-                    |or
+            strong
+                |or
 
-                a.ui.horizontal.label.green href="#{ new_user_registration_path }"
-                    |Sign up
-
-                /.menu
-                    .ui.form.item
-                        .field
-                            .ui.left.labeled.icon.input
-                                input type="text" placeholder="E-mail"
-                                i.user.icon
-                                .ui.corner.label
-                                    i.icon.asterisk
-
-                        .field
-                            .ui.left.labeled.icon.input
-                                input type="password" placeholder="Password"
-                                i.lock.icon
-                                .ui.corner.label
-                                    i.icon.asterisk
-
-                        input.ui.blue.submit.button type="submit" value="Sign in"
+            a.ui.horizontal.label.green href="#{ new_user_registration_path }"
+                |Sign up
